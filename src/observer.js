@@ -36,7 +36,7 @@ const mixin = (target) =>  {
 }
 
 export const observer = (arg) => {
-    const componentClass = arg1;
+    const componentClass = arg;
     const target = componentClass.prototype || componentClass;
     mixin(target)
     return target;

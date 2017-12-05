@@ -41,7 +41,7 @@ var mixin = function mixin(target) {
 };
 
 var observer = function observer(arg) {
-    var componentClass = arg1;
+    var componentClass = arg;
     var target = componentClass.prototype || componentClass;
     mixin(target);
     return target;

@@ -5,7 +5,7 @@ const filesize = require("rollup-plugin-filesize")
 const commonjs = require("rollup-plugin-commonjs")
 const resolve = require("rollup-plugin-node-resolve")
 
-const externals = ['mobx', 'lit-html'];
+const externals = ['strudel', 'mobx', 'lit-html'];
 
 const builds = [
   {
@@ -42,6 +42,7 @@ builds.forEach((config) => {
         exports: "named",
         globals: {
             "lit-html": "lit-html",
+            strudel: "strudel",
             mobx: "mobx"
         }
     }

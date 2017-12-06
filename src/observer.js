@@ -1,18 +1,21 @@
+import { element } from 'strudel';
 import { autorun } from 'mobx';
 import { render } from 'lit-html';
 
 const reactiveMixin = {
     init() {
-        this.$mobx = autorun(() => this.render());
+        this._mobx = autorun(() => this._react());
     },
     
     beforeDestroy() {
-        this.$mobx.dispose();
+        this._mobx.$mobx.dispose();
     },
 
-    render() {
-        if (this.template) {
-            render(this.template(this), this.$element.first());
+    _react() {
+        if (this.render) {
+            element(document).trigger('contentunload', this.$element);
+            render(this.render(this), this.$element.first());
+            element(document).trigger('contentloaded', this.$element);
         }
     }
 };
@@ -30,14 +33,19 @@ const patch = (target, funcName) => {
 }
 
 const mixin = (target) =>  {
-    ['init', 'beforeDestroy', 'render'].forEach((funcName) => {
+    ['init', 'beforeDestroy', '_react'].forEach((funcName) => {
         patch(target, funcName);
     });
 }
 
 export const observer = (arg) => {
     const componentClass = arg;
-    const target = componentClass.prototype || componentClass;
-    mixin(target)
+    const target = componentClass.prototype;
+
+    if (!target || !target.isStrudelClass) {
+        throw new Error('Please pass a valid component to "observer"');
+    }
+
+    mixin(target);
     return target;
 };
